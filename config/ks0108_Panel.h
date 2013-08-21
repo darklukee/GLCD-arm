@@ -141,8 +141,12 @@
 #include "config/ks0108_Sanguino.h"  // config for Sanguino or other ATmega644/p board
 #elif defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__) || defined(__AVR_ATmega32U4__)// Teensy
 #include "config/ks0108_Teensy.h"    // config for Teensy and Teensy++  
+#elif defined(__AVR__)
+#include "config/ks0108_Arduino.h"   // config file for standard Arduino using documented wiring
+#elif defined(__arm__)
+#include "config/ks0108_STM32F4.h"
 #else
-#include "config/ks0108_Arduino.h"   // config file for standard Arduino using documented wiring 
+#error "No config selected"
 #endif
 
 #include "device/ks0108_Device.h"
