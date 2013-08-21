@@ -7,7 +7,22 @@
  *
  * Config for every pin on different port
  *
- */
+ * Copyright (C) 2013  darklukee
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see {http://www.gnu.org/licenses/}.
+ *
+*/
 
 #ifndef GLCD_PIN_CONFIG_H
 #define GLCD_PIN_CONFIG_H
@@ -52,7 +67,7 @@ typedef enum
 #if NBR_CHIP_SELECT_PINS > 3
 	, glcdCSEL4 = 14
 #endif
-}	LCD_TypeDef;
+}LCD_TypeDef;
 
 #define glcdData0Pin_PIN	GPIO_Pin_12
 #define glcdData0Pin_PORT	GPIOE
@@ -121,12 +136,12 @@ GPIO_TypeDef* LCD_PORT[LCDn] =
 { glcdData0Pin_PORT, glcdData1Pin_PORT, glcdData2Pin_PORT, glcdData3Pin_PORT, glcdData4Pin_PORT, glcdData5Pin_PORT,
 		glcdData6Pin_PORT, glcdData7Pin_PORT, glcdRW_PORT, glcdDI_PORT, glcdEN_PORT, glcdCSEL1_PORT, glcdCSEL2_PORT
 #if NBR_CHIP_SELECT_PINS > 2
-	, glcdCSEL3_PORT
+		, glcdCSEL3_PORT
 #endif
 #if NBR_CHIP_SELECT_PINS > 3
-	, glcdCSEL4_PORT
+		, glcdCSEL4_PORT
 #endif
-}	;
+};
 const uint16_t LCD_PIN[LCDn] =
 { glcdData0Pin_PIN, glcdData1Pin_PIN, glcdData2Pin_PIN, glcdData3Pin_PIN, glcdData4Pin_PIN, glcdData5Pin_PIN,
 		glcdData6Pin_PIN, glcdData7Pin_PIN, glcdRW_PIN, glcdDI_PIN, glcdEN_PIN, glcdCSEL1_PIN, glcdCSEL2_PIN
