@@ -54,7 +54,7 @@
 #endif
 #include "include/arduino_io.h"    // these macros map arduino pins
 #elif __arm__
-#include //some arm io config
+//no config needed at this time
 #endif
 
 /*
@@ -146,7 +146,7 @@
 /*
  * Setting pull ups on input
  */
-#define lcdDataPullUp() lcdDataOut(0xff)
+#define lcdDataPullUp(pull) lcdDataOut(0xff)
 
 /*
  * alias to read status bits
@@ -172,69 +172,46 @@
 #endif // _AVRIO_AVRIO_
 
 #ifdef ARMIO_H_
-// lcdfastWrite Macro may be replaced by Paul's new Arduino macro
-#define lcdfastWrite(pin, pinval) ARMio_WritePin(pin, pinval)
 
-#ifndef OUTPUT
-#define OUTPUT 1
-#endif
+#define lcdfastWrite(pin, pinval) ARMio_WriteBit(pin, pinval)
 
-#ifndef LOW
-#define LOW 0
-#endif
-
-#ifndef HIGH
-#define HIGH 1
-#endif
-
-#define lcdPinMode(pin, mode)  ARMio_PinMode(pin, mode)
+//#ifndef OUTPUT
+//#define OUTPUT 1
+//#endif
+//
+//#ifndef LOW
+//#define LOW 0
+//#endif
+//
+//#ifndef HIGH
+//#define HIGH 1
+//#endif
 
 /*
- * Set up the configured LCD data lines
+ * Configure direction of single pin
  */
-
-#define lcd_avrWriteByte(data) 					\
-	ARMio_Write8Bits(AVRIO_PORTREG,				\
-			glcdData0Pin, glcdData1Pin,		\
-			glcdData2Pin, glcdData3Pin,		\
-			glcdData4Pin, glcdData5Pin,		\
-			glcdData6Pin, glcdData7Pin, data)
-
-/*
- * Read the configured LCD data lines and return data as 8 bit byte
- */
-#define lcd_avrReadByte() 					\
-	ARMio_Read8Bits(AVRIO_PINREG,				\
-			glcdData0Pin, glcdData1Pin,		\
-			glcdData2Pin, glcdData3Pin,		\
-			glcdData4Pin, glcdData5Pin,		\
-			glcdData6Pin, glcdData7Pin)
+#define lcdPinMode(pin, mode)  ARMio_SetDirPin(pin, mode)
 
 /*
  * Configure the direction of the data pins.
  *	0x00 is for input and 0xff is for output.
  */
-#define lcdDataDir(dirbits)					\
-	ARMio_Write8Bits(AVRIO_DDRREG, 				\
-			glcdData0Pin, glcdData1Pin,		\
-			glcdData2Pin, glcdData3Pin,		\
-			glcdData4Pin, glcdData5Pin,		\
-			glcdData6Pin, glcdData7Pin, dirbits)
+#define lcdDataDir(dirbits)					ARMio_SetDir(dirbits)
 
 /*
  * alias to setup LCD data lines.
  */
-#define lcdDataOut(data)	lcd_avrWriteByte(data)
+#define lcdDataOut(data)	ARMio_WriteByte(data)
 
 /*
  * alias to Read LCD data lines.
  */
-#define lcdDataIn()		lcd_avrReadByte()
+#define lcdDataIn()		ARMio_ReadByte()
 
 /*
  * Setting pull ups on input, use with input mode
  */
-#define lcdDataPullUp() ARMio_SetPullUp()
+#define lcdDataPullUp(pull) ARMio_SetPullUp(pull)
 
 /*
  * alias to read status bits
@@ -245,13 +222,12 @@
 /*
  * alias to check status bits
  */
-
 #define lcdIsBusyStatus(status) (status & LCD_BUSY_FLAG)
 #define lcdIsResetStatus(status) (status & LCD_RESET_FLAG)
 
 #ifdef glcdRES
-#define lcdReset()		ARMio_WritePin(glcdRES, 0)
-#define lcdUnReset()	ARMio_WritePin(glcdRES, 1)
+#define lcdReset()		ARMio_WriteBit(glcdRES, 0)
+#define lcdUnReset()	ARMio_WriteBit(glcdRES, 1)
 #else
 #define lcdReset()
 #define lcdUnReset()

@@ -26,6 +26,10 @@
 #include "../config/ks0108_Panel.h"
 #include "stm32f4xx_gpio.h"
 
+/*
+ * TODO: 4bit not implemented
+ */
+
 static inline void ARMio_WriteBit(LCD_PinDef pin, uint8_t val)
 {
 	GPIO_WriteBit(LCD_PORT[pin], LCD_PIN[pin], (BitAction) val);
@@ -54,9 +58,33 @@ static inline uint8_t ARMio_ReadByte()
 	return data;
 }
 
-static inline void ARMio_SetPullUp(void)
+static inline void ARMio_SetPullUp(bool pull)
 {
 // TODO: set this up without messing up other
+	uint32_t pinpos = 0x00;
+
+	for (LCD_PinDef i = glcdData0Pin; i <= glcdData7Pin; i++)
+	{
+		GPIO_TypeDef* GPIOx = LCD_PORT[i];
+		pinpos = LCD_PIN[i];
+		/* Pull-up Pull down resistor configuration*/
+		GPIOx->PUPDR &= ~(GPIO_PUPDR_PUPDR0 << ((uint16_t) pinpos * 2));
+		GPIOx->PUPDR |= (((uint32_t) (pull ? GPIO_PuPd_UP : GPIO_PuPd_NOPULL)) << (pinpos * 2));
+	}
+}
+
+static inline void ARMio_SetDirPin(LCD_PinDef pin, uint8_t dir)
+{
+#define DIR_IN 0x00
+#define DIR_OUT 0xff
+	GPIO_InitTypeDef GPIO_InitStruct;
+	GPIO_StructInit(&GPIO_InitStruct);
+	if (dir != DIR_IN) //default IN  in GPIO_StructInit();
+		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
+	//TODO: consider setting speed
+
+	GPIO_InitStruct.GPIO_Pin = LCD_PIN[pin];
+	GPIO_Init(LCD_PORT[pin], &GPIO_InitStruct);
 }
 
 static inline void ARMio_SetDir(uint8_t dir)
@@ -65,7 +93,7 @@ static inline void ARMio_SetDir(uint8_t dir)
 #define DIR_OUT 0xff
 	GPIO_InitTypeDef GPIO_InitStruct;
 	GPIO_StructInit(&GPIO_InitStruct);
-	if (dir == DIR_OUT) //default IN  in GPIO_StructInit();
+	if (dir != DIR_IN) //default IN  in GPIO_StructInit();
 		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 	//TODO: consider setting speed
 

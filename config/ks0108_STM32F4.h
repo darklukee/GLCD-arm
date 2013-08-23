@@ -48,7 +48,7 @@
 
 typedef enum
 {
-	glcdData0Pin = 0,
+	glcdData0Pin = 0, // Data pins must have corresponding values
 	glcdData1Pin = 1,
 	glcdData2Pin = 2,
 	glcdData3Pin = 3,
