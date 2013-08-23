@@ -77,45 +77,25 @@ static inline void ARMio_SetDirPin(LCD_PinDef pin, uint8_t dir)
 {
 #define DIR_IN 0x00
 #define DIR_OUT 0xff
-	GPIO_InitTypeDef GPIO_InitStruct;
-	GPIO_StructInit(&GPIO_InitStruct);
-	if (dir != DIR_IN) //default IN  in GPIO_StructInit();
-		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
-	//TODO: consider setting speed
+	GPIO_TypeDef* GPIOx = LCD_PORT[pin];
+	uint32_t pinpos = LCD_PIN[pin];
 
-	GPIO_InitStruct.GPIO_Pin = LCD_PIN[pin];
-	GPIO_Init(LCD_PORT[pin], &GPIO_InitStruct);
+	GPIOx->MODER &= ~(GPIO_MODER_MODER0 << (pinpos * 2));
+	GPIOx->MODER |= (((uint32_t) ((dir == DIR_IN) ? GPIO_Mode_IN : GPIO_Mode_OUT)) << (pinpos * 2));
 }
 
 static inline void ARMio_SetDir(uint8_t dir)
 {
 #define DIR_IN 0x00
 #define DIR_OUT 0xff
-	GPIO_InitTypeDef GPIO_InitStruct;
-	GPIO_StructInit(&GPIO_InitStruct);
-	if (dir != DIR_IN) //default IN  in GPIO_StructInit();
-		GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
-	//TODO: consider setting speed
 
-	uint8_t lcdPins = 0;
 	for (LCD_PinDef i = glcdData0Pin; i <= glcdData7Pin; i++)
 	{
-		if (lcdPins & (1 << i)) //pin set
-			continue;
+		GPIO_TypeDef* GPIOx = LCD_PORT[i];
+		uint32_t pinpos = LCD_PIN[i];
 
-		GPIO_InitStruct.GPIO_Pin = LCD_PIN[i];
-		lcdPins |= (1 << i);
-		for (LCD_PinDef j = i + 1; j <= glcdData7Pin; j++)
-		{
-			if (LCD_PORT[i] == LCD_PORT[j])
-			{
-				GPIO_InitStruct.GPIO_Pin |= LCD_PIN[j];
-				lcdPins |= (1 << j);
-			}
-		}
-		GPIO_Init(LCD_PORT[i], &GPIO_InitStruct);
+		GPIOx->MODER &= ~(GPIO_MODER_MODER0 << (pinpos * 2));
+		GPIOx->MODER |= (((uint32_t) ((dir == DIR_IN) ? GPIO_Mode_IN : GPIO_Mode_OUT)) << (pinpos * 2));
 	}
-	if (lcdPins != 0xff)
-		dummy("Not every pin was chceked, do something about me");
 }
 #endif /* ARMIO_H_ */
