@@ -38,7 +38,9 @@ row
  */
 
 #include <inttypes.h>
+#ifdef __AVR__
 #include <avr/pgmspace.h>
+#endif
 
 #ifndef VERDANA24_H
 #define VERDANA24_H
@@ -46,7 +48,7 @@ row
 #define VERDANA24_WIDTH 10
 #define VERDANA24_HEIGHT 24
 
-static uint8_t Verdana24[] PROGMEM = {
+static uint8_t Verdana24[] = {
     0x0E, 0xF9, // size
     0x0A, // width
     0x18, // height

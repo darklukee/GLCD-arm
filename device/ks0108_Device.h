@@ -53,7 +53,7 @@
 #endif
 
 
-#ifndef glcdEN
+#ifndef glcdEN_PIN
 #error "KS0108 configuration missing glcdEN"
 #endif
 

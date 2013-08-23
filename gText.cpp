@@ -1,4 +1,23 @@
 /*
+ * Copyright (C) 2013  darklukee
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see {http://www.gnu.org/licenses/}.
+ *
+ * This file incorporates work covered by the following copyright and
+ * permission notice:
+ *
+
   gText.cpp - Support for Text output on a graphical device 
   Copyright (c) 2009,2010  Bill Perry and Michael Margolis
 
@@ -21,7 +40,9 @@
 
 */
 
+#ifdef __AVR__
 #include <avr/pgmspace.h>
+#endif
 #include "include/gText.h"
 #include "glcd_Config.h" 
 
@@ -1156,16 +1177,16 @@ void gText::Puts(const String &str)
  * @see write()
  */
 
-void gText::Puts_P(PGM_P str)
-{
-uint8_t c;
-
-    while((c = pgm_read_byte(str)) != 0)
-	{
-        this->PutChar(c);
-        str++;
-    }
-}
+//void gText::Puts_P(PGM_P str)
+//{
+//uint8_t c;
+//
+//    while((c = pgm_read_byte(str)) != 0)
+//	{
+//        this->PutChar(c);
+//        str++;
+//    }
+//}
 
 /**
  * output a character string at x,y coordinate
@@ -1247,11 +1268,11 @@ void gText::DrawString(String &str, uint8_t x, uint8_t y)
  * @see write()
  */
 
-void gText::DrawString_P(PGM_P str, uint8_t x, uint8_t y)
-{
-	this->CursorToXY(x,y);
-	this->Puts_P(str);
-}
+
+//{
+//	this->CursorToXY(x,y);
+//	this->Puts_P(str);
+//}
 
 /**
  * Positions cursor to a character based column and row.
@@ -1582,16 +1603,16 @@ uint16_t gText::StringWidth(const char* str)
  * @see StringWidth()
  */
 
-uint16_t gText::StringWidth_P(PGM_P str)
-{
-	uint16_t width = 0;
-	
-	while(pgm_read_byte(str) != 0) {
-		width += this->CharWidth(pgm_read_byte(str++));
-	}
-	
-	return width;
-}
+//uint16_t gText::StringWidth_P(PGM_P str)
+//{
+//	uint16_t width = 0;
+//
+//	while(pgm_read_byte(str) != 0) {
+//		width += this->CharWidth(pgm_read_byte(str++));
+//	}
+//
+//	return width;
+//}
 
 /**
  * Returns the pixel width of a character
@@ -1666,6 +1687,7 @@ size_t gText::write(uint8_t c)
 } 
 #endif
 
+#ifdef __AVR__
 #ifndef USE_ARDUINO_FLASHSTR
 // functions to store and print strings in Progmem
 // these should be removed when Arduino supports FLASH strings in the base print class
@@ -1693,6 +1715,7 @@ void gText::printFlashln(FLASHSTRING str)
   printFlash(str);
   write('\n');
 }
+#endif
 #endif
 
 

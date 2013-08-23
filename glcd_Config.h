@@ -15,6 +15,10 @@
 #ifndef glcd_CONFIG_H
 #define glcd_CONFIG_H
 
+#ifndef __AVR__
+#define _BV(x) (1 << x)
+#endif
+
  /*
   * You can select a configuration file by uncommenting one line to include the
   * the desired configuration file.

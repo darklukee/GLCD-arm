@@ -501,7 +501,7 @@ uint8_t status;
 
 	glcd_DevSelectChip(chip);
 	lcdDataDir(0x00);			// input mode
-	lcdDataPullUp(true);			// turn on pullups
+	lcdDataPullUp(true);			// turn on pullups; TODO: remove pullUp?
 	lcdfastWrite(glcdDI, LOW);	
 	lcdfastWrite(glcdRW, HIGH);	
 //	lcdDelayNanoseconds(GLCD_tAS);

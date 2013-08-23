@@ -1,4 +1,22 @@
 /*
+ * Copyright (C) 2013  darklukee
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see {http://www.gnu.org/licenses/}.
+ *
+ * This file incorporates work covered by the following copyright and
+ * permission notice:
+ *
   gText.h - Support for Text output on a graphical device
   Copyright (c) 2009,2010  Bill Perry and Michael Margolis
 
@@ -25,20 +43,26 @@
 #define GTEXT_H
 
 #include <inttypes.h>
+
+#ifdef __AVR__
 #include <avr/pgmspace.h>
+#endif
+
 
 #include "WString.h"
-#include "include/Streaming.h" 
+#include "include/Streaming.h"
 #include "include/glcd_Device.h"
 
 
 #define GTEXT_VERSION 1 // software version of this code
 
+#ifdef __AVR__
 #ifndef USE_ARDUINO_FLASHSTR
 // these should be replaced when Arduino supports FLASH strings in the base print class
 #include <avr/pgmspace.h>
 typedef class _FlashString {} *FLASHSTRING;
 #define flashStr(x) ((FLASHSTRING)(PSTR((x))))
+#endif
 #endif
 
 // Font Indices
@@ -238,10 +262,10 @@ class gText : public glcd_Device
 	int PutChar(uint8_t c);
 	void Puts(char *str);
 	void Puts(const String &str); // for Arduino String Class
-	void Puts_P(PGM_P str);
+//	void Puts_P(PGM_P str);
 	void DrawString(char *str, uint8_t x, uint8_t y);
 	void DrawString(String &str, uint8_t x, uint8_t y); // for Arduino String class
-	void DrawString_P(PGM_P str, uint8_t x, uint8_t y);
+//	void DrawString_P(PGM_P str, uint8_t x, uint8_t y);
 
 #if ARDUINO < 100
 	void write(uint8_t c);  // character output for print base class
@@ -254,7 +278,7 @@ class gText : public glcd_Device
 	void CursorToXY( uint8_t x, uint8_t y); // coordinates relative to active text area
 	uint8_t CharWidth(uint8_t c);
 	uint16_t StringWidth(const char* str);
-	uint16_t StringWidth_P(PGM_P str);
+//	uint16_t StringWidth_P(PGM_P str);
 	uint16_t StringWidth_P(String &str);
 
 	void EraseTextLine( eraseLine_t type=eraseTO_EOL); //ansi like line erase function 
@@ -263,15 +287,18 @@ class gText : public glcd_Device
     // legacy text output functions 
 	void PrintNumber(long n);
 
+#ifdef __AVR__
 #ifndef USE_ARDUINO_FLASHSTR	
 	// when the following function is supported in arduino it will be removed from this library
 	void printFlash(FLASHSTRING str); //this overrides the Arduino print function to implicilty store the string in flash (progmem)
     void printFlashln(FLASHSTRING str);
 #endif
+#endif
 	
+#define GLCD_NO_PRINTF
 #ifndef GLCD_NO_PRINTF
 	void Printf(const char *format, ...);
-	void Printf_P(const char *format, ...);
+//	void Printf_P(const char *format, ...);
 #endif
 /*@}*/
 

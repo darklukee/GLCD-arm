@@ -173,19 +173,17 @@
 
 #ifdef ARMIO_H_
 
-#define lcdfastWrite(pin, pinval) ARMio_WriteBit(pin, pinval)
+#ifndef OUTPUT
+#define OUTPUT 1
+#endif
 
-//#ifndef OUTPUT
-//#define OUTPUT 1
-//#endif
-//
-//#ifndef LOW
-//#define LOW 0
-//#endif
-//
-//#ifndef HIGH
-//#define HIGH 1
-//#endif
+#ifndef LOW
+#define LOW 0
+#endif
+
+#ifndef HIGH
+#define HIGH 1
+#endif
 
 /*
  * Configure direction of single pin
@@ -197,6 +195,11 @@
  *	0x00 is for input and 0xff is for output.
  */
 #define lcdDataDir(dirbits)					ARMio_SetDir(dirbits)
+
+/*
+ * Set single pin value
+ */
+#define lcdfastWrite(pin, pinval) ARMio_WriteBit(pin, pinval)
 
 /*
  * alias to setup LCD data lines.
@@ -216,8 +219,8 @@
 /*
  * alias to read status bits
  */
-#define lcdRdBusystatus()		(ARMio_ReadPin(GLCD_STATUS_BIT2PIN(LCD_BUSY_BIT)))
-#define lcdRdResetstatus()		(ARMio_ReadPin(GLCD_STATUS_BIT2PIN(LCD_RESET_BIT)))
+#define lcdRdBusystatus()		(ARMio_ReadBit(GLCD_STATUS_BIT2PIN(LCD_BUSY_BIT)))
+#define lcdRdResetstatus()		(ARMio_ReadBit(GLCD_STATUS_BIT2PIN(LCD_RESET_BIT)))
 
 /*
  * alias to check status bits
@@ -260,8 +263,9 @@
 #define lcdDelayMilliseconds(__ms) delay(__ms)	// Arduino delay function
 #else
 //freeRTOS delays
-#include "task.h"
+//#include "task.h"
 //TODO: use real miliseconds. use nanoseconds?
+extern  void vTaskDelay( long xTicksToDelay );
 #define lcdDelayNanoseconds(__ns) vTaskDelay(1) //minimal delay, without wasting CPU
 #define lcdDelayMilliseconds(__ms) vTaskDelay(__ms) //only if configTICK_RATE_HZ = 1000
 #endif
@@ -295,13 +299,13 @@
 #error GLCD chip count beyond max of 4
 #endif
 
-#if defined(glcdCSEL4)
+#if defined(glcdCSEL4_PIN)
 #define lcdChipSelect(cselstr) lcdChipSelect4(cselstr)
-#elif defined(glcdCSEL3)
+#elif defined(glcdCSEL3_PIN)
 #define lcdChipSelect(cselstr) lcdChipSelect3(cselstr)
-#elif defined(glcdCSEL2)
+#elif defined(glcdCSEL2_PIN)
 #define lcdChipSelect(cselstr) lcdChipSelect2(cselstr)
-#elif defined(glcdCSEL1)
+#elif defined(glcdCSEL1_PIN)
 #define lcdChipSelect(cselstr) lcdChipSelect1(cselstr)
 #endif
 
