@@ -26,42 +26,37 @@
 #include "../config/ks0108_Panel.h"
 #include "stm32f4xx_gpio.h"
 
-static inline void ARMio_WriteBit(uint8_t regtyp, avrpin_t pin, uint8_t val)
+static inline void ARMio_WriteBit(LCD_PinDef pin, uint8_t val)
 {
-
+	GPIO_WriteBit(LCD_PORT[pin], LCD_PIN[pin], (BitAction) val);
 }
 
-static inline void ARMio_WriteReg(uint8_t regtyp, uint8_t avrport, uint8_t data)
+static inline void ARMio_WriteByte(uint8_t data)
 {
-
+	for (LCD_PinDef i = glcdData0Pin; i <= glcdData7Pin; i++)
+	{
+		ARMio_WriteBit(i, data & (1 << ((uint8_t) i)));
+	}
 }
 
-
-static inline uint8_t ARMio_ReadBit(uint8_t regtyp, avrpin_t avrpin)
+static inline uint8_t ARMio_ReadBit(LCD_PinDef pin)
 {
-
+	return GPIO_ReadInputDataBit(LCD_PORT[pin], LCD_PIN[pin]);
 }
 
-static inline uint8_t ARMio_ReadReg(uint8_t regtyp, uint8_t avrport)
+static inline uint8_t ARMio_ReadByte()
 {
-
-}
-
-static inline void ARMio_Write8Bits(uint8_t regtyp, avrpin_t p0, avrpin_t p1, avrpin_t p2, avrpin_t p3, avrpin_t p4,
-	avrpin_t p5, avrpin_t p6, avrpin_t p7, uint8_t data)
-{
-
-}
-
-static inline uint8_t ARMio_Read8Bits(uint8_t regtyp, avrpin_t p0, avrpin_t p1, avrpin_t p2, avrpin_t p3, avrpin_t p4,
-	avrpin_t p5, avrpin_t p6, avrpin_t p7)
-{
-
+	uint8_t data = 0;
+	for (LCD_PinDef i = glcdData0Pin; i <= glcdData7Pin; i++)
+	{
+		data |= (ARMio_ReadBit(i) << ((uint8_t) i));
+	}
+	return data;
 }
 
 static inline void ARMio_SetPullUp(void)
 {
-//set this up without messing up other
+// TODO: set this up without messing up other
 }
 
 static inline void ARMio_SetDir(uint8_t dir)
@@ -75,19 +70,19 @@ static inline void ARMio_SetDir(uint8_t dir)
 	//TODO: consider setting speed
 
 	uint8_t lcdPins = 0;
-	for(LCD_PinDef i = glcdData0Pin; i <= glcdData7Pin; i++)
+	for (LCD_PinDef i = glcdData0Pin; i <= glcdData7Pin; i++)
 	{
-		if(lcdPins & (1 << i)) //pin set
+		if (lcdPins & (1 << i)) //pin set
 			continue;
 
 		GPIO_InitStruct.GPIO_Pin = LCD_PIN[i];
-		lcdPins |= (1<<i);
-		for(LCD_PinDef j = i+1; j <= glcdData7Pin; j++)
+		lcdPins |= (1 << i);
+		for (LCD_PinDef j = i + 1; j <= glcdData7Pin; j++)
 		{
-			if(LCD_PORT[i] == LCD_PORT[j])
+			if (LCD_PORT[i] == LCD_PORT[j])
 			{
 				GPIO_InitStruct.GPIO_Pin |= LCD_PIN[j];
-				lcdPins |= (i<<j);
+				lcdPins |= (1 << j);
 			}
 		}
 		GPIO_Init(LCD_PORT[i], &GPIO_InitStruct);
