@@ -1,5 +1,25 @@
 /*
+ * glcd_Device.cpp - library support for graphic LCDs
+ * Copyright (C) 2013  darklukee
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see {http://www.gnu.org/licenses/}.
+ *
+ * This file incorporates work covered by the following copyright and
+ * permission notice:
+ *
   glcd_Device.cpp - Arduino library support for graphic LCDs 
+
   Copyright (c) 2009, 2010 Michael Margolis and Bill Perry 
   
   vi:ts=4  
@@ -481,7 +501,7 @@ uint8_t status;
 
 	glcd_DevSelectChip(chip);
 	lcdDataDir(0x00);			// input mode
-	lcdDataOut(0xff);			// turn on pullups
+	lcdDataPullUp();			// turn on pullups
 	lcdfastWrite(glcdDI, LOW);	
 	lcdfastWrite(glcdRW, HIGH);	
 //	lcdDelayNanoseconds(GLCD_tAS);
@@ -508,7 +528,7 @@ void glcd_Device::WaitReady( uint8_t chip)
 
 	while(lcdRdBusystatus())
 	{
-       ;
+		lcdDelayNanoseconds(1); //no cpu wasted
 	}
 	glcd_DevENstrobeLo(chip);
 }

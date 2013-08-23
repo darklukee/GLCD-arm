@@ -1,5 +1,5 @@
 /*
- * ks0108_Arduino.h - User specific configuration for ARM GLCD library
+ * ks0108_STM32F4.h - User specific configuration for ARM GLCD library
  *
  * Use this file to set io pins
  * This version is for a standard ks0108 display
@@ -67,7 +67,7 @@ typedef enum
 #if NBR_CHIP_SELECT_PINS > 3
 	, glcdCSEL4 = 14
 #endif
-}LCD_TypeDef;
+}LCD_PinDef;
 
 #define glcdData0Pin_PIN	GPIO_Pin_12
 #define glcdData0Pin_PORT	GPIOE
