@@ -163,6 +163,7 @@ const uint32_t LCD_CLK[LCDn] =
 #endif
 }	;
 
+
 	/*********************************************************/
 	/*  Configuration for assigning LCD bits to Arduino Pins */
 	/*********************************************************/

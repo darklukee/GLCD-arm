@@ -186,6 +186,11 @@
 #endif
 
 /*
+ * Pin initial config
+ */
+#define lcdInitConfig() ARMio_InitConfig()
+
+/*
  * Configure direction of single pin
  */
 #define lcdPinMode(pin, mode)  ARMio_SetDirPin(pin, mode)

@@ -30,6 +30,22 @@
  * TODO: 4bit not implemented
  */
 
+static inline void ARMio_InitConfig(void)
+{
+  GPIO_InitTypeDef  GPIO_InitStructure;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+
+	for (int i = 0; i <= LCDn; i++)
+	{
+	  RCC_AHB1PeriphClockCmd(LCD_CLK[(LCD_PinDef)i], ENABLE);
+	  GPIO_InitStructure.GPIO_Pin = LCD_PIN[(LCD_PinDef)i];
+		GPIO_Init(LCD_PORT[(LCD_PinDef)i], &GPIO_InitStructure);
+	}
+}
+
 static inline void ARMio_WriteBit(LCD_PinDef pin, uint8_t val)
 {
 	GPIO_WriteBit(LCD_PORT[pin], LCD_PIN[pin], (BitAction) val);
