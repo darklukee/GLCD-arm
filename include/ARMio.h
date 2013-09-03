@@ -32,17 +32,17 @@
 
 static inline void ARMio_InitConfig(void)
 {
-  GPIO_InitTypeDef  GPIO_InitStructure;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_InitTypeDef GPIO_InitStructure;
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 
 	for (int i = 0; i <= LCDn; i++)
 	{
-	  RCC_AHB1PeriphClockCmd(LCD_CLK[(LCD_PinDef)i], ENABLE);
-	  GPIO_InitStructure.GPIO_Pin = LCD_PIN[(LCD_PinDef)i];
-		GPIO_Init(LCD_PORT[(LCD_PinDef)i], &GPIO_InitStructure);
+		RCC_AHB1PeriphClockCmd(LCD_CLK[(LCD_PinDef) i], ENABLE);
+		GPIO_InitStructure.GPIO_Pin = LCD_PIN[(LCD_PinDef) i];
+		GPIO_Init(LCD_PORT[(LCD_PinDef) i], &GPIO_InitStructure);
 	}
 }
 
@@ -55,7 +55,7 @@ static inline void ARMio_WriteByte(uint8_t data)
 {
 	for (int i = glcdData0Pin; i <= glcdData7Pin; i++)
 	{
-		ARMio_WriteBit((LCD_PinDef)i, data & (1 <<  i));
+		ARMio_WriteBit((LCD_PinDef) i, data & (1 << i));
 	}
 }
 
@@ -69,7 +69,7 @@ static inline uint8_t ARMio_ReadByte()
 	uint8_t data = 0;
 	for (int i = glcdData0Pin; i <= glcdData7Pin; i++)
 	{
-		data |= (ARMio_ReadBit((LCD_PinDef)i) << i);
+		data |= (ARMio_ReadBit((LCD_PinDef) i) << i);
 	}
 	return data;
 }
@@ -78,8 +78,8 @@ static inline void ARMio_SetPullUp(bool pull)
 {
 	for (int i = glcdData0Pin; i <= glcdData7Pin; i++)
 	{
-		GPIO_TypeDef* GPIOx = LCD_PORT[(LCD_PinDef)i];
-		uint32_t pinpos = LCD_PIN[(LCD_PinDef)i];
+		GPIO_TypeDef* GPIOx = LCD_PORT[(LCD_PinDef) i];
+		uint32_t pinpos = LCD_PIN[(LCD_PinDef) i];
 		/* Pull-up Pull down resistor configuration*/
 		GPIOx->PUPDR &= ~(GPIO_PUPDR_PUPDR0 << ((uint16_t) pinpos * 2));
 		GPIOx->PUPDR |= (((uint32_t) (pull ? GPIO_PuPd_UP : GPIO_PuPd_NOPULL)) << (pinpos * 2));
@@ -103,8 +103,8 @@ static inline void ARMio_SetDir(uint8_t dir)
 #define DIR_OUT 0xff
 	for (int i = glcdData0Pin; i <= glcdData7Pin; i++)
 	{
-		GPIO_TypeDef* GPIOx = LCD_PORT[(LCD_PinDef)i];
-		uint32_t pinpos = LCD_PIN[(LCD_PinDef)i];
+		GPIO_TypeDef* GPIOx = LCD_PORT[(LCD_PinDef) i];
+		uint32_t pinpos = LCD_PIN[(LCD_PinDef) i];
 
 		GPIOx->MODER &= ~(GPIO_MODER_MODER0 << (pinpos * 2));
 		GPIOx->MODER |= (((uint32_t) ((dir == DIR_IN) ? GPIO_Mode_IN : GPIO_Mode_OUT)) << (pinpos * 2));
