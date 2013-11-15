@@ -171,10 +171,14 @@
 
 #endif // _AVRIO_AVRIO_
 
-#ifdef ARMIO_H_
+#ifdef __arm__
 
 #ifndef OUTPUT
-#define OUTPUT 1
+#define OUTPUT DIR_OUT
+#endif
+
+#ifndef INPUT
+#define INPUT DIR_IN
 #endif
 
 #ifndef LOW
@@ -268,10 +272,14 @@
 #define lcdDelayMilliseconds(__ms) delay(__ms)	// Arduino delay function
 #else
 //freeRTOS delays
+//#include "FreeRTOS.h"
 //#include "task.h"
+#include "../portable/portmacro.h" //freeRTOS portTickType
+#include "stm32f4xx.h"
 //TODO: use real miliseconds. use nanoseconds?
-extern  void vTaskDelay( long xTicksToDelay );
-#define lcdDelayNanoseconds(__ns) vTaskDelay(1) //minimal delay, without wasting CPU
+extern "C" void vTaskDelay( portTickType xTicksToDelay );
+//#define lcdDelayNanoseconds(__ns) vTaskDelay(1) //minimal delay, without wasting CPU
+#define lcdDelayNanoseconds(__ns) for(volatile uint32_t i =5*__ns;i>0; i--){;}
 #define lcdDelayMilliseconds(__ms) vTaskDelay(__ms) //only if configTICK_RATE_HZ = 1000
 #endif
 

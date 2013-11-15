@@ -26,6 +26,9 @@
 #include "../config/ks0108_Panel.h"
 #include "stm32f4xx_gpio.h"
 
+#define DIR_IN GPIO_Mode_IN
+#define DIR_OUT GPIO_Mode_OUT
+
 /*
  * TODO: 4bit not implemented
  */
@@ -79,35 +82,40 @@ static inline void ARMio_SetPullUp(bool pull)
 	for (int i = glcdData0Pin; i <= glcdData7Pin; i++)
 	{
 		GPIO_TypeDef* GPIOx = LCD_PORT[(LCD_PinDef) i];
-		uint32_t pinpos = LCD_PIN[(LCD_PinDef) i];
-		/* Pull-up Pull down resistor configuration*/
-		GPIOx->PUPDR &= ~(GPIO_PUPDR_PUPDR0 << ((uint16_t) pinpos * 2));
-		GPIOx->PUPDR |= (((uint32_t) (pull ? GPIO_PuPd_UP : GPIO_PuPd_NOPULL)) << (pinpos * 2));
+		uint32_t currentpin = LCD_PIN[(LCD_PinDef) i];
+		for (uint32_t pinpos = 0; pinpos < 0x10; pinpos++)
+		{
+			if (currentpin == (((uint32_t) 1) << pinpos))
+			{
+				/* Pull-up Pull down resistor configuration*/
+				GPIOx->PUPDR &= ~(GPIO_PUPDR_PUPDR0 << ((uint16_t) pinpos * 2));
+				GPIOx->PUPDR |= (((uint32_t) (pull ? GPIO_PuPd_UP : GPIO_PuPd_NOPULL)) << (pinpos * 2));
+				break;
+			}
+		}
 	}
 }
 
 static inline void ARMio_SetDirPin(LCD_PinDef pin, uint8_t dir)
 {
-#define DIR_IN 0x00
-#define DIR_OUT 0xff
 	GPIO_TypeDef* GPIOx = LCD_PORT[pin];
-	uint32_t pinpos = LCD_PIN[pin];
-
-	GPIOx->MODER &= ~(GPIO_MODER_MODER0 << (pinpos * 2));
-	GPIOx->MODER |= (((uint32_t) ((dir == DIR_IN) ? GPIO_Mode_IN : GPIO_Mode_OUT)) << (pinpos * 2));
+	uint32_t currentpin = LCD_PIN[pin];
+	for (uint32_t pinpos = 0; pinpos < 0x10; pinpos++)
+	{
+		if (currentpin == (((uint32_t) 1) << pinpos))
+		{
+			GPIOx->MODER &= ~(GPIO_MODER_MODER0 << (pinpos * 2));
+			GPIOx->MODER |= (((uint32_t) ((dir == DIR_IN) ? GPIO_Mode_IN : GPIO_Mode_OUT)) << (pinpos * 2));
+			break;
+		}
+	}
 }
 
 static inline void ARMio_SetDir(uint8_t dir)
 {
-#define DIR_IN 0x00
-#define DIR_OUT 0xff
 	for (int i = glcdData0Pin; i <= glcdData7Pin; i++)
 	{
-		GPIO_TypeDef* GPIOx = LCD_PORT[(LCD_PinDef) i];
-		uint32_t pinpos = LCD_PIN[(LCD_PinDef) i];
-
-		GPIOx->MODER &= ~(GPIO_MODER_MODER0 << (pinpos * 2));
-		GPIOx->MODER |= (((uint32_t) ((dir == DIR_IN) ? GPIO_Mode_IN : GPIO_Mode_OUT)) << (pinpos * 2));
+		ARMio_SetDirPin((LCD_PinDef) i, dir);
 	}
 }
 #endif /* ARMIO_H_ */

@@ -132,7 +132,7 @@ typedef enum
 #define glcdCSEL4_CLK		RCC_AHB1Periph_GPIO
 #endif
 
-GPIO_TypeDef* LCD_PORT[LCDn] =
+static GPIO_TypeDef* LCD_PORT[LCDn] =
 { glcdData0Pin_PORT, glcdData1Pin_PORT, glcdData2Pin_PORT, glcdData3Pin_PORT, glcdData4Pin_PORT, glcdData5Pin_PORT,
 		glcdData6Pin_PORT, glcdData7Pin_PORT, glcdRW_PORT, glcdDI_PORT, glcdEN_PORT, glcdCSEL1_PORT, glcdCSEL2_PORT
 #if NBR_CHIP_SELECT_PINS > 2
@@ -142,7 +142,7 @@ GPIO_TypeDef* LCD_PORT[LCDn] =
 		, glcdCSEL4_PORT
 #endif
 };
-const uint16_t LCD_PIN[LCDn] =
+static const uint16_t LCD_PIN[LCDn] =
 { glcdData0Pin_PIN, glcdData1Pin_PIN, glcdData2Pin_PIN, glcdData3Pin_PIN, glcdData4Pin_PIN, glcdData5Pin_PIN,
 		glcdData6Pin_PIN, glcdData7Pin_PIN, glcdRW_PIN, glcdDI_PIN, glcdEN_PIN, glcdCSEL1_PIN, glcdCSEL2_PIN
 #if NBR_CHIP_SELECT_PINS > 2
@@ -152,7 +152,7 @@ const uint16_t LCD_PIN[LCDn] =
 	, glcdCSEL4_PIN
 #endif
 }	;
-const uint32_t LCD_CLK[LCDn] =
+static const uint32_t LCD_CLK[LCDn] =
 { glcdData0Pin_CLK, glcdData1Pin_CLK, glcdData2Pin_CLK, glcdData3Pin_CLK, glcdData4Pin_CLK, glcdData5Pin_CLK,
 		glcdData6Pin_CLK, glcdData7Pin_CLK, glcdRW_CLK, glcdDI_CLK, glcdEN_CLK, glcdCSEL1_CLK, glcdCSEL2_CLK
 #if NBR_CHIP_SELECT_PINS > 2
@@ -162,8 +162,6 @@ const uint32_t LCD_CLK[LCDn] =
 	, glcdCSEL4_CLK
 #endif
 }	;
-
-
 	/*********************************************************/
 	/*  Configuration for assigning LCD bits to Arduino Pins */
 	/*********************************************************/

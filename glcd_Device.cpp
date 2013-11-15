@@ -340,18 +340,18 @@ int glcd_Device::Init(uint8_t invert)
 
 	lcdPinMode(glcdDI,OUTPUT);	
 	lcdPinMode(glcdRW,OUTPUT);	
-
+#ifdef __AVR__
 #ifdef glcdE1
-	lcdPinMode(glcdE1,OUTPUT);	
-	lcdfastWrite(glcdE1,LOW); 	
+	lcdPinMode(glcdE1,OUTPUT);
+	lcdfastWrite(glcdE1,LOW);
 #endif
 #ifdef glcdE2
-	lcdPinMode(glcdE2,OUTPUT);	
-	lcdfastWrite(glcdE2,LOW); 	
+	lcdPinMode(glcdE2,OUTPUT);
+	lcdfastWrite(glcdE2,LOW);
 #endif
 
 #ifdef glcdEN
-	lcdPinMode(glcdEN,OUTPUT);	
+	lcdPinMode(glcdEN,OUTPUT);
 	lcdfastWrite(glcdEN, LOW);
 #endif
 
@@ -380,6 +380,43 @@ int glcd_Device::Init(uint8_t invert)
 	 */
 #ifdef glcdRES
 	lcdPinMode(glcdRES,OUTPUT);
+#endif
+
+#elif __arm__
+#ifdef glcdE1
+	lcdPinMode(glcdE1,OUTPUT);	
+	lcdfastWrite(glcdE1,LOW); 	
+#endif
+#ifdef glcdE2
+	lcdPinMode(glcdE2,OUTPUT);	
+	lcdfastWrite(glcdE2,LOW); 	
+#endif
+
+	lcdPinMode(glcdEN,OUTPUT);	
+	lcdfastWrite(glcdEN, LOW);
+
+	lcdPinMode(glcdCSEL1,OUTPUT);
+	lcdfastWrite(glcdCSEL1, LOW);
+
+	lcdPinMode(glcdCSEL2,OUTPUT);
+	lcdfastWrite(glcdCSEL2, LOW);
+
+#ifdef glcdCSEL3
+	lcdPinMode(glcdCSEL3,OUTPUT);
+	lcdfastWrite(glcdCSEL3, LOW);
+#endif
+
+#ifdef glcdCSEL4
+	lcdPinMode(glcdCSEL4,OUTPUT);
+	lcdfastWrite(glcdCSEL4, LOW);
+#endif
+
+	/*
+	 * If reset control
+	 */
+#ifdef glcdRES
+	lcdPinMode(glcdRES,OUTPUT);
+#endif
 #endif
 
 
@@ -500,7 +537,7 @@ uint8_t glcd_Device::GetStatus(uint8_t chip)
 uint8_t status;
 
 	glcd_DevSelectChip(chip);
-	lcdDataDir(0x00);			// input mode
+	lcdDataDir(INPUT);			// input mode
 	lcdDataPullUp(true);			// turn on pullups; TODO: remove pullUp?
 	lcdfastWrite(glcdDI, LOW);	
 	lcdfastWrite(glcdRW, HIGH);	
@@ -519,7 +556,7 @@ uint8_t status;
 void glcd_Device::WaitReady( uint8_t chip)
 {
 	glcd_DevSelectChip(chip);
-	lcdDataDir(0x00);
+	lcdDataDir(INPUT);
 	lcdfastWrite(glcdDI, LOW);	
 	lcdfastWrite(glcdRW, HIGH);	
 //	lcdDelayNanoseconds(GLCD_tAS);
@@ -622,7 +659,7 @@ void glcd_Device::WriteCommand(uint8_t cmd, uint8_t chip)
 	this->WaitReady(chip);
 	lcdfastWrite(glcdDI, LOW);					// D/I = 0
 	lcdfastWrite(glcdRW, LOW);					// R/W = 0	
-	lcdDataDir(0xFF);
+	lcdDataDir(OUTPUT);
 
 	lcdDataOut(cmd);		/* This could be done before or after raising E */
 	lcdDelayNanoseconds(GLCD_tAS);
@@ -680,7 +717,7 @@ void glcd_Device::WriteData(uint8_t data) {
 		this->WaitReady(chip);
    	    lcdfastWrite(glcdDI, HIGH);				// D/I = 1
 	    lcdfastWrite(glcdRW, LOW);				// R/W = 0
-		lcdDataDir(0xFF);						// data port is output
+		lcdDataDir(OUTPUT);						// data port is output
 		lcdDelayNanoseconds(GLCD_tAS);
 		glcd_DevENstrobeHi(chip);
 		
@@ -723,7 +760,7 @@ void glcd_Device::WriteData(uint8_t data) {
 
    	    lcdfastWrite(glcdDI, HIGH);					// D/I = 1
 	    lcdfastWrite(glcdRW, LOW); 					// R/W = 0	
-		lcdDataDir(0xFF);				// data port is output
+		lcdDataDir(OUTPUT);				// data port is output
 		lcdDelayNanoseconds(GLCD_tAS);
 		glcd_DevENstrobeHi(chip);
 
@@ -751,7 +788,7 @@ void glcd_Device::WriteData(uint8_t data) {
 
 		lcdfastWrite(glcdDI, HIGH);				// D/I = 1
 		lcdfastWrite(glcdRW, LOW);  				// R/W = 0	
-		lcdDataDir(0xFF);						// data port is output
+		lcdDataDir(OUTPUT);						// data port is output
 
 		// just this code gets executed if the write is on a single page
 		if(this->Inverted)
