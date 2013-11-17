@@ -1052,7 +1052,7 @@ int gText::PutChar(uint8_t c)
 				mask |= _BV(dy & 7) - 1;
 
 			if ((pixels - p) < 8)
-				mask |= ~(_BV(pixels - p) - 1);
+				mask |= ~(_BV((pixels - p)) - 1);
 
 			if (this->FontColor == WHITE)
 				dbyte |= ~mask;
@@ -1112,12 +1112,13 @@ int gText::PutChar(uint8_t c)
  * @see write()
  */
 
-void gText::Puts(char *str)
+void gText::Puts(const char *str)
 {
-	while (*str)
+	unsigned int i =0;
+	while (*(str+i))
 	{
-		this->PutChar((uint8_t) *str);
-		str++;
+		this->PutChar((uint8_t) *(str+i));
+		i++;
 	}
 }
 
@@ -1138,7 +1139,7 @@ void gText::Puts(char *str)
  */
 void gText::Puts(const String &str)
 {
-	for (int i = 0; i < str.length(); i++)
+	for (unsigned int i = 0; i < str.length(); i++)
 	{
 		write(str[i]);
 	}
@@ -1611,7 +1612,7 @@ uint16_t gText::StringWidth_P(String &str)
 {
 	uint16_t width = 0;
 
-	for (int i = 0; i < str.length(); i++)
+	for (unsigned int i = 0; i < str.length(); i++)
 	{
 		width += this->CharWidth(str[i]);
 	}
