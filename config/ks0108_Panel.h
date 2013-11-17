@@ -56,8 +56,11 @@
  * Two Chip panels using two select pins (the most common panel type)
  */
 #if glcd_CHIP_COUNT == 2
-#define glcd_CHIP0 glcdCSEL1,HIGH,   glcdCSEL2,LOW
-#define glcd_CHIP1 glcdCSEL1,LOW,    glcdCSEL2,HIGH    
+//#define glcd_CHIP0 glcdCSEL1,HIGH,   glcdCSEL2,LOW
+//#define glcd_CHIP1 glcdCSEL1,LOW,    glcdCSEL2,HIGH
+//RG12864C has /CS1 and /CS2
+#define glcd_CHIP0 glcdCSEL1,LOW,   glcdCSEL2,HIGH
+#define glcd_CHIP1 glcdCSEL1,HIGH,    glcdCSEL2,LOW
 
 /*
  * Three Chip panel using two select pins
