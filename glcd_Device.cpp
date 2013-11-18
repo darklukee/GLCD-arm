@@ -72,7 +72,7 @@ lcdCoord glcd_Device::Coord;
 // undesired pixels.
 //
 // current RECOMMENDED setting: OFF
-#define GLCD_TEENSY_PCB_RESET_WAIT	// turns on code to deal with slow rising reset on Teensy PCB ADAPTER// this code is only turned on when library is compiled for teensy boards.
+//#define GLCD_TEENSY_PCB_RESET_WAIT	// turns on code to deal with slow rising reset on Teensy PCB ADAPTER// this code is only turned on when library is compiled for teensy boards.
 // The reason for this was to support a ks0108 GLCD adapter PCB for the Teensy.
 // The reset signal created on that board is 250ms long
 // but rises very slow so reset polling

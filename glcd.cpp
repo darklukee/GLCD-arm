@@ -769,5 +769,6 @@ void glcd::GotoXY(uint8_t x, uint8_t y)
 } 
 
 // Make one instance for the user
-glcd GLCD = glcd();
+//glcd GLCD = glcd(); //with 'GNU Tools for ARM Embedded' constructor is never called!!!!
+//instance created in user soft
  
