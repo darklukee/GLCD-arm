@@ -714,7 +714,7 @@ int gText::PutChar(uint8_t c)
 	}
 	c -= firstChar;
 
-	if (isFixedWidthFont(this->Font)
+	if (isFixedWidthFont(this->Font))
 	{
 		thielefont = 0;
 		width = FontRead(this->Font + FONT_FIXED_WIDTH);
@@ -1530,7 +1530,7 @@ uint8_t gText::CharWidth(uint8_t c)
 {
 	uint8_t width = 0;
 
-	if (isFixedWidthFont(this->Font)
+	if (isFixedWidthFont(this->Font))
 	{
 		width = FontRead(this->Font + FONT_FIXED_WIDTH) + 1; // there is 1 pixel pad here
 	}
