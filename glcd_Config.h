@@ -107,7 +107,7 @@
 				// and an additional 220 bytes in the diag sketch. This will cause
 				// diags to hang if wires are not correct vs return an error.
 
-//#define GLCD_READ_CACHE       // Turns on code that uses a frame buffer for a read cache
+#define GLCD_READ_CACHE       // Turns on code that uses a frame buffer for a read cache
 				// This adds only ~52 bytes of code but...
 				// will use DISPLAY_HEIGHT/8 * DISPLAY_WIDTH bytes of RAM
 				// A typical 128x64 ks0108 will use 1k of RAM for this.
